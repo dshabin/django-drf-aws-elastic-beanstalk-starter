@@ -1,0 +1,8 @@
+django==2.1.1
+django-cors-headers
+django-filter
+djangorestframework
+gunicorn
+meld3
+pytz
+sqlparse
