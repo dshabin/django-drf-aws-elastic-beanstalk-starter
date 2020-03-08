@@ -1,0 +1,7 @@
+deploy.zip
+env
+env3
+*.py[cod]
+__pycache__
+.DS_Store
+db.sqlite3
