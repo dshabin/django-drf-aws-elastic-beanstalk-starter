@@ -25,14 +25,14 @@ class UsersAPIView(APIView):
             params = {
                 'body_params': {
                     'password': {'required': True},
-                    'email' : {'required': True}
+                    'username' : {'required': True}
                 }
             }
             parsed_params = request_params_parser(request, params)
-            users = User.objects.filter(username=parsed_params['email'])
+            users = User.objects.filter(username=parsed_params['username'])
             if users:
                 return JsonResponse({"error": {"message": "USER_ALREADY_EXIST"}}, status=200)
-            user = User.objects.create_user(email=parsed_params['email'],username=parsed_params['email'] , password=parsed_params['password'])
+            user = User.objects.create_user(username=parsed_params['username'] , password=parsed_params['password'])
             profile = Profile.objects.create(user=user,)
             token , _ = Token.objects.get_or_create(user=user)          
             data = ProfileSerializer(profile,many=False).data
@@ -51,6 +51,8 @@ class FetchCurrentAPIView(APIView):
         try:
             user = Profile.objects.get(user=request.user)
             data = ProfileSerializer(user,many=False).data
+            token , _ = Token.objects.get_or_create(user=request.user) 
+            data['token'] = token.key
             return JsonResponse({"data": data}, status=200)
         except Exception as e:
             print(traceback.format_exc())
