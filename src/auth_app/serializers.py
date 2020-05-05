@@ -7,6 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('username','is_superuser')
         model = User
+        
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True,many=False)
     class Meta:

@@ -27,11 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost' ]
 
-ALLOWED_API_KEYS = ["somekey"]
-
 CORS_ORIGIN_ALLOW_ALL = True
-
-MAX_ATTEMPTS=1
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -42,19 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'users_app',
+    'auth_app',
     'corsheaders',
 ]
-
-# Q_CLUSTER = {
-#     'name': 'DjangORM',
-#     'workers': 1,
-#     'queue_limit': 50,
-#     'orm': 'default',
-#     'retry' : 600,
-#     'recycle' : 1,
-#     'poll' : 10,
-# }
 
 
 MIDDLEWARE = [
