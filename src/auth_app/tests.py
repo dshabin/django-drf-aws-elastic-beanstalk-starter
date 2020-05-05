@@ -18,7 +18,7 @@ class AuthTests(APITestCase):
 
         # Login
         data = { 'username' : 'test@test.test' , 'password' : '123456' }
-        url = reverse('auth-login')
+        url = reverse('auth-signin')
         response = self.client.post(url, data)
         res_data = json.loads(response.content)
         token = res_data['data']['token']

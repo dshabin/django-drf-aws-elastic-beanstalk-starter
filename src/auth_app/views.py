@@ -57,7 +57,7 @@ class FetchCurrentAPIView(APIView):
 
 
 
-class LoginAPIView(APIView):
+class SigninAPIView(APIView):
     authentication_classes = []
     permission_classes = []
 
