@@ -8,7 +8,6 @@ from django.http import JsonResponse
 from django.db import transaction
 from rest_framework.permissions import IsAdminUser
 from .models import Profile
-from commons.helpers import request_params_parser
 from .serializers import ProfileSerializer
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
@@ -21,17 +20,12 @@ class SignupAPIView(APIView):
 
     def post(self, request, format=None):
         try:
-            params = {
-                'body_params': {
-                    'password': {'required': True},
-                    'username' : {'required': True}
-                }
-            }
-            parsed_params = request_params_parser(request, params)
-            users = User.objects.filter(username=parsed_params['username'])
+            username = request.data.get('username',None)
+            password = request.data.get('password',None)
+            users = User.objects.filter(username=username)
             if users:
-                return JsonResponse({"error": {"message": "USER_ALREADY_EXIST"}}, status=400)
-            user = User.objects.create_user(username=parsed_params['username'] , password=parsed_params['password'])
+                return JsonResponse({"error": {"message": "User already exists"}}, status=400)
+            user = User.objects.create_user(username=username , password=password)
             profile = Profile.objects.create(user=user,)
             data = ProfileSerializer(profile,many=False).data
             return JsonResponse({"data": data}, status=201)
@@ -63,15 +57,8 @@ class SigninAPIView(APIView):
 
     def post(self, request, format=None):
         try:
-            params = {
-                'body_params': {
-                    'username' : { 'required' : True  },
-                    'password' : { 'required' : True  },
-                }
-            }
-            parsed_params = request_params_parser(request,params)
-            username = parsed_params['username']
-            password = parsed_params['password']
+            username = request.data.get('username',None)
+            password = request.data.get('password',None)
             user = authenticate(username = username, password = password)
             if user:
                 token , _ = Token.objects.get_or_create(user=user)
@@ -79,7 +66,7 @@ class SigninAPIView(APIView):
                 data = ProfileSerializer(profile,many=False).data
                 data['token'] = token.key
             else :
-                return JsonResponse({ "error" : {"message"  : "INAVLID_USERNAME_OR_PASSWORD"} },status=400)
+                return JsonResponse({ "error" : {"message"  : "Invalid username or password"} },status=400)
             return JsonResponse({"data" : data},status=200)
         except Exception as e:
             print(traceback.format_exc())
